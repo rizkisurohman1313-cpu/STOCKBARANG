@@ -1,0 +1,82 @@
+{
+  "judulProyek": "Sistem Informasi Manajemen Stok Barang Berbasis Web",
+  "namaMahasiswa": "",
+  "nim": "",
+  "kelasSemester": "Manajemen Informatika",
+  "dosenPengampu": "",
+  "institusi": "Politeknik Negeri Lampung",
+  "tglMulai": "2024-05-01",
+  "tglSelesai": "2024-06-15",
+  "latarBelakang": "Pencatatan stok barang yang masih manual sering menyebabkan selisih data, hilangnya riwayat barang masuk/keluar, dan sulitnya memonitor stok yang hampir habis secara real-time. Oleh karena itu, diperlukan sebuah sistem informasi manajemen stok yang terpusat dan terkomputerisasi agar data lebih akurat dan terstruktur.",
+  "rumusanMasalah": "1. Bagaimana merancang basis data relasional untuk sistem manajemen stok barang yang efektif?\n2. Bagaimana membangun aplikasi berbasis web yang mampu menangani pencatatan stok, penerimaan barang, dan mutasi stok secara otomatis?",
+  "tujuanProyek": "1. Merancang dan mengimplementasikan database relasional untuk sistem manajemen inventaris.\n2. Membangun aplikasi berbasis web menggunakan framework Laravel untuk mempermudah pencatatan stok.\n3. Menyediakan sistem pelaporan pergerakan stok (audit trail) secara akurat.",
+  "lingkupDikerjakan": "1. Manajemen Master Data (User, Kategori, Supplier, Produk)\n2. Pencatatan Purchase Order (PO) dan Sales Order (SO)\n3. Pencatatan Penerimaan Barang (Receiving)\n4. Update Stok Otomatis dan riwayat pergerakan stok\n5. Multi-role Authentication (Admin, Manager, Operator, Viewer)",
+  "lingkupTidak": "1. Sistem Akuntansi / Jurnal Umum\n2. Integrasi dengan sistem pembayaran eksternal (Payment Gateway)",
+  "targetUser": "Admin Gudang, Manajer Stok, dan Operator Logistik",
+  "manfaat": "Meningkatkan akurasi data stok, mempercepat proses audit gudang, dan meminimalisir human error dalam pencatatan mutasi barang.",
+  "techStackDetail": "Arsitektur: Model-View-Controller (MVC)\n- Backend: Laravel (PHP 8)\n- Database: MySQL 8.0\n- Frontend: HTML5, CSS3, Bootstrap 5\n- Keamanan: Role-based Access Control (RBAC), CSRF Protection, Password Hashing",
+  "folderStructureDetail": "stok_barang/\n|-- app/ (Models, Controllers)\n|-- database/ (Migrations, Seeders)\n|-- resources/views/ (Blade templates)\n|-- routes/web.php\n`-- public/ (CSS, JS, Images)",
+  "userFlow": "Login -> Dashboard -> Kelola Data Master (Kategori/Produk) -> Proses Transaksi (PO/SO/Receiving) -> Cek Laporan Stok -> Logout",
+  "routingTable": "/login -> Halaman Login\n/dashboard -> Dashboard Statistik\n/products -> Manajemen Produk (CRUD)\n/stocks -> Laporan Stok & Mutasi\n/purchase-orders -> Transaksi Pembelian",
+  "metodeHosting": "Local + Tunnel (ngrok)",
+  "urlHosting": "",
+  "langkahDeploy": "1. Clone repository ke server lokal\n2. Jalankan 'composer install'\n3. Buat database MySQL dan sesuaikan file .env\n4. Jalankan 'php artisan migrate'\n5. Jalankan 'php artisan serve' untuk pengujian",
+  "konfigChange": "Lokal: DB_HOST=127.0.0.1, DB_DATABASE=stok_barang_app\nHosting: Disesuaikan dengan kredensial server produksi",
+  "ringkasanPengujian": "Pengujian fungsionalitas CRUD berjalan lancar. Perhitungan otomatis saat penerimaan (stok bertambah) dan penjualan (stok berkurang) sesuai dengan workflow yang diharapkan. Hak akses tiap pengguna berfungsi dengan baik.",
+  "kendalaSolusiPengujian": "Kendala 1: Perubahan stok saat SO dihapus tidak kembali semula secara otomatis.\nSolusi: Menambahkan Observer atau trigger pada event Eloquent untuk me-revert stok saat transaksi dibatalkan.",
+  "kesimpulanPengujian": "Sistem secara fungsional telah siap digunakan. Seluruh logika transaksi dan manajemen hak akses bekerja sesuai spesifikasi.",
+  "kesimpulan": "Proyek Sistem Informasi Manajemen Stok Barang berbasis web ini berhasil direkayasa dan diimplementasikan menggunakan arsitektur MVC (Laravel). Sistem ini terbukti efektif dalam mencatat transaksi dan mengotomatisasi mutasi stok.",
+  "saran": "Untuk pengembangan aplikasi ke depannya, sistem dapat ditambahkan beberapa fitur berikut:\n1. Integrasi Barcode / QR Code Scanner untuk mempermudah dan mempercepat input fisik barang.\n2. Export Data Laporan ke format PDF dan Excel untuk kebutuhan cetak dokumen resmi gudang.\n3. Notifikasi Real-time (via Email / WhatsApp) saat stok barang hampir habis (menyentuh reorder level).\n4. Advanced Analytics & Dashboard Interaktif untuk memantau performa pergerakan barang (fast-moving vs slow-moving) secara visual.",
+  "__schemas": [
+    {
+      "nama": "categories",
+      "kolom": [
+        { "nama": "id", "tipe": "INT", "isPK": true, "isNotNull": true, "refTable": "", "refCol": "" },
+        { "nama": "name", "tipe": "VARCHAR(100)", "isPK": false, "isNotNull": true, "refTable": "", "refCol": "" }
+      ]
+    },
+    {
+      "nama": "products",
+      "kolom": [
+        { "nama": "id", "tipe": "INT", "isPK": true, "isNotNull": true, "refTable": "", "refCol": "" },
+        { "nama": "category_id", "tipe": "INT", "isPK": false, "isNotNull": true, "refTable": "categories", "refCol": "id" },
+        { "nama": "name", "tipe": "VARCHAR(255)", "isPK": false, "isNotNull": true, "refTable": "", "refCol": "" },
+        { "nama": "buy_price", "tipe": "DECIMAL(10,2)", "isPK": false, "isNotNull": true, "refTable": "", "refCol": "" }
+      ]
+    },
+    {
+      "nama": "stocks",
+      "kolom": [
+        { "nama": "id", "tipe": "INT", "isPK": true, "isNotNull": true, "refTable": "", "refCol": "" },
+        { "nama": "product_id", "tipe": "INT", "isPK": false, "isNotNull": true, "refTable": "products", "refCol": "id" },
+        { "nama": "qty_on_hand", "tipe": "INT", "isPK": false, "isNotNull": true, "refTable": "", "refCol": "" }
+      ]
+    }
+  ],
+  "__mockup": [],
+  "__screenshot": [],
+  "__testCases": [
+    {
+      "id": 1,
+      "skenario": "Tambah Data Kategori & Produk Baru",
+      "hasilDiharapkan": "Data tersimpan di database dan sukses tampil di halaman list.",
+      "status": "Berhasil",
+      "buktiGambar": []
+    },
+    {
+      "id": 2,
+      "skenario": "Penerimaan Barang (Receiving Workflow)",
+      "hasilDiharapkan": "Stok (qty_on_hand) otomatis bertambah berdasarkan jumlah di Purchase Order.",
+      "status": "Berhasil",
+      "buktiGambar": []
+    },
+    {
+      "id": 3,
+      "skenario": "Pengujian Hak Akses Role (Operator)",
+      "hasilDiharapkan": "User dengan role Operator tidak dapat mengakses halaman Manajemen Pengguna.",
+      "status": "Berhasil",
+      "buktiGambar": []
+    }
+  ],
+  "__nextTestCaseId": 4
+}
