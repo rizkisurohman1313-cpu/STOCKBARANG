@@ -4,12 +4,6 @@
 -- Status: Ternormalisasi (3NF)
 -- =====================================================
 
--- Hapus database jika ada
-DROP DATABASE IF EXISTS stok_barang_app;
-
--- Buat database
-CREATE DATABASE stok_barang_app;
-USE stok_barang_app;
 
 -- =====================================================
 -- 1. TABEL USERS (Pengguna Sistem)

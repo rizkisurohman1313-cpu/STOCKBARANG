@@ -34,7 +34,7 @@ class ReceivingController extends Controller
         $validated = $request->validate([
             'supplier_id' => 'required|exists:suppliers,supplier_id',
             'po_id' => 'nullable|exists:purchase_orders,po_id',
-            'tanggal_terima' => 'required|date_format:Y-m-d H:i',
+            'tanggal_terima' => 'required|date_format:Y-m-d\TH:i',
             'items' => 'required|array|min:1',
             'items.*.product_id' => 'required|exists:products,product_id',
             'items.*.quantity_received' => 'required|integer|min:1',

@@ -50,11 +50,11 @@ Route::middleware('auth')->group(function () {
     // Stock Management
     Route::middleware('role:admin,manajer_stok,operator')->group(function () {
         Route::get('/stocks', [StockController::class, 'index'])->name('stocks.index');
+        Route::get('/stocks/low-stock', [StockController::class, 'lowStock'])->name('stocks.lowStock');
         Route::get('/stocks/{stock}', [StockController::class, 'show'])->name('stocks.show');
         Route::get('/stocks/{productId}/adjustment', [StockController::class, 'adjustment'])->name('stocks.adjustment');
         Route::post('/stocks/{productId}/adjustment', [StockController::class, 'storeAdjustment'])->name('stocks.storeAdjustment');
         Route::get('/stocks/{productId}/movements', [StockController::class, 'movements'])->name('stocks.movements');
-        Route::get('/stocks/low-stock', [StockController::class, 'lowStock'])->name('stocks.lowStock');
     });
 
     // Purchase Order Management (admin dan manajer stok)
