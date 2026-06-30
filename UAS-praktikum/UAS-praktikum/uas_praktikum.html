@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src 'self' data: blob:;">
+<title>UAS Praktikum — Pemrograman SQL II</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<div class="progress-wrap no-print">
+  <span class="progress-label">Progress</span>
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+  <span class="progress-pct" id="progressPct">0%</span>
+  <span class="storage-meter" id="storageMeter">DB: --</span>
+</div>
+
+<div class="doc-wrapper" id="uasDocument">
+
+  <!-- COVER -->
+  <div class="cover">
+    <div class="kop">
+      <img src="assets/logo-polinela.png" alt="Logo Polinela">
+      <div class="kop-text">
+        <p class="inst">Politeknik Negeri Lampung</p>
+        <p class="unit">Jurusan Teknologi Informasi &middot; Prodi Manajemen Informatika</p>
+        <p class="addr">Jl. Soekarno-Hatta No.10, Rajabasa, Bandar Lampung</p>
+      </div>
+      <img src="assets/logo-sdgs.jpg" alt="Logo SDGs">
+    </div>
+    <div class="cover-title">
+      <div class="eyebrow">Ujian Akhir Semester &mdash; Praktikum Genap 2025/2026</div>
+      <h1>Pemrograman SQL II</h1>
+      <div class="ruled"></div>
+      <p class="sub">Soal bersifat <strong>unik per mahasiswa</strong> berdasarkan NIM. Jawab sesuai varian yang muncul. Jawaban identik antar mahasiswa = <strong>tidak sah</strong>. Waktu: <strong>90 menit</strong>.</p>
+    </div>
+    <div class="cover-grid">
+      <div class="cover-field"><label>Nama</label><input data-required data-label="Nama" id="nama" placeholder="Nama lengkap"></div>
+      <div class="cover-field"><label>NIM</label>
+        <div style="display:flex;gap:6px;flex:1;">
+          <input data-required data-label="NIM" id="nim" placeholder="24100001" style="flex:1;font-weight:800;background:transparent;border:none;font-family:var(--mono);font-size:14px;padding:2px 0;color:var(--ink);">
+          <button class="btn btn-sm btn-light no-print" id="lockNimBtn" style="white-space:nowrap;" onclick="kunciNIM()">Kunci NIM</button>
+        </div>
+      </div>
+      <div class="cover-field"><label>Kelas</label><input data-required data-label="Kelas" id="kelas" placeholder="MI-3A"></div>
+      <div class="cover-field"><label>Judul Project</label><input data-required data-label="Judul Project" id="judulProject" placeholder="Judul project RND Anda"></div>
+      <div class="cover-field"><label>Tgl Ujian</label><input type="date" id="tglUjian"></div>
+      <div class="cover-field"><label>Dosen</label><input id="dosen" placeholder="Dosen pengampu"></div>
+    </div>
+  </div>
+
+  <!-- NIM INFO BAR -->
+  <div class="nim-info no-print" id="nimInfoBar">
+    <span id="nimInfoText">Masukkan NIM valid lalu klik <strong>Kunci NIM</strong> untuk generate soal</span>
+    <span class="var" id="nimVariantLabel">—</span>
+  </div>
+
+  <!-- TIMER -->
+  <div class="timer-bar no-print" id="timerBar" style="display:none;">
+    <span>Sisa Waktu</span>
+    <span class="timer-display" id="timerDisplay">90:00</span>
+  </div>
+
+  <!-- SKEMA REFERENSI -->
+  <div class="section" id="bagianSkema">
+    <div class="section-head"><span class="num">REF</span><h2>Skema Database AKADEMIK</h2></div>
+    <div class="section-body">
+      <div class="pernyataan-box" style="border-left-color:var(--accent-2);">
+        <p style="margin:0 0 8px;"><strong>Database AKADEMIK</strong> — digunakan di semua soal SQL. Terdiri dari 6 tabel:</p>
+        <div class="table-scroll">
+        <table class="tbl">
+          <tr><th>Tabel</th><th>PK</th><th>FK &rarr;</th><th>Kolom Lain</th></tr>
+          <tr><td>JENJANG</td><td>idjenjang</td><td>—</td><td>nmjenjang</td></tr>
+          <tr><td>PRODI</td><td>idprodi</td><td>idjenjang</td><td>nmprodi</td></tr>
+          <tr><td>MAHASISWA</td><td>npm</td><td>idprodi, idstatusaka</td><td>nama, thn_masuk, ipk</td></tr>
+          <tr><td>DOSEN</td><td>nmdosen</td><td>idprodi, idpendidikan</td><td>gelar</td></tr>
+          <tr><td>PENDIDIKAN</td><td>idpendidikan</td><td>—</td><td>nmpendidikan</td></tr>
+          <tr><td>STATUS_AKADEMIK</td><td>idstatusaka</td><td>—</td><td>nmstatusaka</td></tr>
+        </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SOAL CONTAINER -->
+  <div id="soalContainer"></div>
+
+  <!-- PERNYATAAN -->
+  <div class="section" id="bagianPernyataan" style="display:none;">
+    <div class="section-head"><span class="num">PRNY.</span><h2>Pernyataan</h2></div>
+    <div class="section-body">
+      <div class="pernyataan-box">
+        Saya menyatakan bahwa jawaban di atas saya tulis berdasarkan project RND Final Project yang saya kerjakan sendiri dan sesuai varian soal yang diberikan. Kesamaan jawaban = sanksi akademik.
+      </div>
+      <div class="soal-item" style="border-left-color:var(--accent-2);">
+        <div class="soal-nomor">Pernyataan</div>
+        <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:10px;">
+          <div style="flex:1;min-width:160px;"><label class="fld">Nama</label><input class="input" id="pernyataanNama" placeholder="(diketik ulang)"></div>
+          <div style="flex:1;min-width:160px;"><label class="fld">NIM</label><input class="input" id="pernyataanNim" placeholder="(diketik ulang)"></div>
+          <div style="flex:1;min-width:160px;"><label class="fld">Tanda Tangan</label><input class="input" id="pernyataanTTD" placeholder="Nama lengkap"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div>UAS Praktikum &mdash; Pemrograman SQL II</div>
+    <div class="copyright">&copy; <span id="copyYear"></span> Polinela &mdash; Prodi Manajemen Informatika</div>
+  </footer>
+
+</div>
+
+<!-- ACTION BAR -->
+<div class="action-bar no-print">
+  <div class="group">
+    <button class="btn btn-ok" id="simpanBtn">Simpan</button>
+    <button class="btn btn-warn" id="resetBtn">Reset</button>
+    <button class="btn btn-light" id="exportBtn">Export JSON</button>
+    <button class="btn btn-light" id="importBtn">Import JSON</button>
+    <input type="file" id="importFile" accept="application/json,.json" style="display:none">
+  </div>
+  <div class="group">
+    <button class="btn btn-primary" id="cetakBtn">Validasi &amp; Cetak PDF</button>
+  </div>
+</div>
+
+<script src="assets/script.js"></script>
+</body>
+</html>
